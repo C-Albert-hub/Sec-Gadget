@@ -8,5 +8,5 @@ scan_model -- 调用fofa api 进行查询
 
 
 exe文件需要cmd打开，并且保持权限足够，否则无法创建对应的文件夹，和写入文件。
-![Uploading image.png…]()
+![这是我的图片](images/image.png)
 
