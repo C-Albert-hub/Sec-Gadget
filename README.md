@@ -10,5 +10,12 @@
 `go build -o scanner.exe`
 <br>
 exe文件需要cmd打开，并且保持权限足够，否则无法创建对应的文件夹，和写入文件。
+<br>
+1. 
+<br>
 ![运行图片](./Screenshot.png)
+<br>
+2. 
+<br>
+![xlsx中内容](./img.png)
 
