@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/tracer_scanner.iml" filepath="$PROJECT_DIR$/.idea/tracer_scanner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Fofa_scan.iml" filepath="$PROJECT_DIR$/.idea/Fofa_scan.iml" />
     </modules>
   </component>
 </project>

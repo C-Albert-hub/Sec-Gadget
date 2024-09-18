@@ -17,7 +17,7 @@ func ConvertJSONToXLSX(jsonDir string, outputFile string) error {
 		return fmt.Errorf("创建工作表时出错: %w", err)
 	}
 
-	// 添加表头,后续根据fofa的field字段对应添加
+	// 添加表头
 	headerRow := sheet.AddRow()
 	headerRow.AddCell().Value = "IP"
 	headerRow.AddCell().Value = "域名"
@@ -30,40 +30,33 @@ func ConvertJSONToXLSX(jsonDir string, outputFile string) error {
 			return err
 		}
 
+		// 只处理 JSON 文件
 		if filepath.Ext(path) == ".json" {
 			data, err := os.ReadFile(path)
 			if err != nil {
 				return fmt.Errorf("读取文件 %s 时出错: %w", path, err)
 			}
 
-			var jsonObject map[string]interface{}
+			// 解析 JSON 文件
+			var jsonObject struct {
+				Results [][]interface{} `json:"results"`
+			}
 
 			if err := json.Unmarshal(data, &jsonObject); err != nil {
 				return fmt.Errorf("解析 JSON 文件 %s 时出错: %w", path, err)
 			}
 
-			results, ok := jsonObject["results"].([]interface{})
-			if !ok {
-				return fmt.Errorf("文件 %s 中找不到 results 字段", path)
-			}
-
 			// 将 results 数据写入 XLSX 文件
-			for _, item := range results {
-				resultItem, ok := item.([]interface{})
+			for _, resultItem := range jsonObject.Results {
 				row := sheet.AddRow()
 
-				if !ok {
-					// 如果是非数组类型，继续处理其他项
-					continue
-				}
-
-				// 检查 IP 和 域名 的索引，并写入单元格
-				if len(resultItem) >= 2 {
+				// 写入 IP 和域名的信息
+				if len(resultItem) >= 5 {
 					row.AddCell().Value = fmt.Sprintf("%v", resultItem[0]) // IP
 					row.AddCell().Value = fmt.Sprintf("%v", resultItem[1]) // 域名
 					row.AddCell().Value = fmt.Sprintf("%v", resultItem[2]) // 端口
 					row.AddCell().Value = fmt.Sprintf("%v", resultItem[3]) // 标题
-					row.AddCell().Value = fmt.Sprintf("%v", resultItem[4]) //最近更新时间
+					row.AddCell().Value = fmt.Sprintf("%v", resultItem[4]) // 最近更新时间
 				}
 			}
 		}

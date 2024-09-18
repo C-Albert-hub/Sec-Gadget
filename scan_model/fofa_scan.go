@@ -10,11 +10,14 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 const (
 	apiUrl = "https://fofa.info/api/v1/search/all"
-	apiKey = ""
+	apiKey = "125228bf3256f2568dd5c45ec875c216"
+	// 请求间隔时间，单位为秒
+	requestInterval = 2 * time.Second
 )
 
 // 利用fofa API 执行 IP 查询并保存响应为单独的 JSON 文件
@@ -30,6 +33,7 @@ func FofaQuery(ip string, jsonDir string) error {
 	values.Set("key", apiKey)
 	values.Set("qbase64", qbase64)
 	values.Set("size", "100")
+	values.Set("size", "20") //每页最多20条
 	values.Set("fields", "ip,domain,port,title,lastupdatetime")
 
 	// 构建完整的请求 URL
@@ -61,10 +65,6 @@ func FofaQuery(ip string, jsonDir string) error {
 		return fmt.Errorf("error reading response: %w", err)
 	}
 
-	/*	// 打印原始响应体
-		fmt.Println("Raw Response Body:")
-		fmt.Println(string(responseBody))*/
-
 	// 格式化 JSON 响应
 	var formattedJson interface{}
 	if err := json.Unmarshal(responseBody, &formattedJson); err != nil {
@@ -75,10 +75,6 @@ func FofaQuery(ip string, jsonDir string) error {
 		return fmt.Errorf("error formatting JSON: %w", err)
 	}
 
-	/*	// 打印格式化后的 JSON
-		fmt.Println("Formatted Response Body:")
-		fmt.Println(string(formattedJsonStr))*/
-
 	// 生成文件名，使用 IP 地址作为文件名的一部分
 	sanitizedIP := strings.ReplaceAll(ip, "/", "_") // 将 / 替换为 _
 	fileName := fmt.Sprintf("%s.json", sanitizedIP)
@@ -87,14 +83,15 @@ func FofaQuery(ip string, jsonDir string) error {
 	// 将格式化后的 JSON 数据写入文件
 	file, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("创建文件时出错: %w", err)
+		return fmt.Errorf("error creating file: %w", err)
 	}
 	defer file.Close()
 
 	if _, err := file.Write(formattedJsonStr); err != nil {
-		return fmt.Errorf("写入文件时出错: %w", err)
+		return fmt.Errorf("error writing to file: %w", err)
 	}
 
-	fmt.Printf("格式化后的响应已保存到 %s\n", filePath)
+	fmt.Printf("Formatted response has been saved to %s\n", filePath)
+
 	return nil
 }
