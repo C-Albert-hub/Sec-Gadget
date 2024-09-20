@@ -10,17 +10,15 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
+	"time" // 引入 time 包
 )
 
 const (
 	apiUrl = "https://fofa.info/api/v1/search/all"
 	apiKey = "125228bf3256f2568dd5c45ec875c216"
-	// 请求间隔时间，单位为秒
-	requestInterval = 2 * time.Second
 )
 
-// 利用fofa API 执行 IP 查询并保存响应为单独的 JSON 文件
+// FofaQuery 利用fofa API 执行 IP 查询并保存响应为单独的 JSON 文件
 func FofaQuery(ip string, jsonDir string) error {
 	// 构建查询字符串，确保格式为 ip=x.x.x.x
 	queryString := fmt.Sprintf("ip=%s", ip)
@@ -34,7 +32,7 @@ func FofaQuery(ip string, jsonDir string) error {
 	values.Set("qbase64", qbase64)
 	values.Set("size", "100")
 	values.Set("size", "20") //每页最多20条
-	values.Set("fields", "ip,domain,port,title,lastupdatetime")
+	values.Set("fields", "ip,domain,port,title,lastupdatetime,server")
 
 	// 构建完整的请求 URL
 	requestURL := fmt.Sprintf("%s?%s", apiUrl, values.Encode())
@@ -92,6 +90,9 @@ func FofaQuery(ip string, jsonDir string) error {
 	}
 
 	fmt.Printf("Formatted response has been saved to %s\n", filePath)
+
+	// 添加延时，防止请求过快
+	time.Sleep(1 * time.Second) // 例如，延迟1秒
 
 	return nil
 }
