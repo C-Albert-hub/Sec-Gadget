@@ -15,10 +15,6 @@ exe文件需要cmd打开，并且保持权限足够，否则无法创建对应�
    
 ![运行图片](./Screenshot.png)
 
-2. xlsx中内容
-
-![xlsx中内容](./img.png)
-
 ## 更新
 默认设置concurrent为10，可以并发请求
 
