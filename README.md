@@ -1,5 +1,5 @@
 # Fofa_scanner
-*一个利用fofa api对指定ip,或者txt文本中获取批量ip的查询工具*
+*一个利用fofa api对指定ip,或者txt文本中进行批量ip的查询工具*
 
 *主要模块*
 * conver_model -- 对查询到的json数据进行解析,并且转化成csv格式
